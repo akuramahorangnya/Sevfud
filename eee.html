@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Save Our Food - Food Loss Awareness</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 font-sans leading-relaxed tracking-wide flex flex-col">
+ 
+ <!-- Header -->
+  <header class="bg-green-700 text-white p-6 shadow-lg">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="text-3xl font-bold">Save Our Food</h1>
+      <nav class="space-x-4">
+        <a href="index.html">Beranda</a>
+        <a href="nff.html">Edukasi</a>
+        <a href="bbb.html">Kontak</a>
+        <a href="ccc.html">Aksi Nyata</a>
+        <a href="ddd.html">Ramalan Pangan</a>
+        <a href="eee.html">Game</a>
+      </nav>
+    </div>
+  </header>
+
+  <!DOCTYPE html>
+  <html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Penyelamat Makanan</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9fafb;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .game-container {
+        width: 400px;
+        height: 600px;
+        background-color: #d4f4e3;
+        border: 2px solid #4caf50;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      .basket {
+        width: 80px;
+        height: 50px;
+        background-color: #2d8e47;
+        position: absolute;
+        bottom: 0;
+        left: 160px;
+        border-radius: 5px;
+      }
+      .food-item {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: orange;
+        border-radius: 50%;
+        animation: fall 2s infinite linear;
+      }
+      .food-item:nth-child(odd) {
+        background-color: #f44336;
+      }
+      .food-item:nth-child(even) {
+        background-color: #ffeb3b;
+      }
+      @keyframes fall {
+        0% { top: 0; }
+        100% { top: 100%; }
+      }
+      .scoreboard {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: #fff;
+        font-size: 20px;
+      }
+      .hp-bar {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #fff;
+        font-size: 20px;
+      }
+      .hearts {
+        position: absolute;
+        top: 10px;
+        left: 160px;
+        color: #fff;
+        font-size: 24px;
+      }
+      .game-over {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 36px;
+        color: red;
+        display: none;
+      }
+      .you-win {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 36px;
+        color: green;
+        display: none;
+      }
+      .bottom-line {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background-color: #000;
+      }
+      .restart-button {
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        display: none;
+        cursor: pointer;
+      }
+      .restart-button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="scoreboard" id="score">Poin: 0</div>
+      <div class="hp-bar" id="hp">HP: 3</div>
+      <div class="hearts" id="hearts">❤️❤️❤️</div>
+      <div class="basket" id="basket"></div>
+      <div class="bottom-line" id="bottom-line"></div>
+      <div class="game-over" id="game-over">Game Over!</div>
+      <div class="you-win" id="you-win">You Win! 🏆</div>
+      <button class="restart-button" id="restart-button">Restart</button>
+    </div>
+  
+    <script>
+      const basket = document.getElementById('basket');
+      const scoreBoard = document.getElementById('score');
+      const hpBoard = document.getElementById('hp');
+      const heartsBoard = document.getElementById('hearts');
+      const gameOverText = document.getElementById('game-over');
+      const youWinText = document.getElementById('you-win');
+      const restartButton = document.getElementById('restart-button');
+      const bottomLine = document.getElementById('bottom-line');
+      let score = 0;
+      let hp = 3;  // Awalnya memiliki 3 HP
+      let hearts = '❤️❤️❤️';  // Awalnya memiliki 3 hati
+      let isGameOver = false;  // Status game
+      let hasWon = false; // Status kemenangan
+  
+      // Mengatur posisi keranjang
+      let basketPosition = 160;
+  
+      // Gerakan keranjang
+      document.addEventListener('keydown', (e) => {
+        if (isGameOver || hasWon) return;  // Tidak gerakkan keranjang jika game over atau menang
+        if (e.key === 'ArrowLeft' && basketPosition > 0) {
+          basketPosition -= 20;
+        } else if (e.key === 'ArrowRight' && basketPosition < 320) {
+          basketPosition += 20;
+        }
+        basket.style.left = `${basketPosition}px`;
+      });
+  
+      // Menambahkan makanan yang jatuh dengan delay acak
+      function spawnFood() {
+        if (isGameOver || hasWon) return;  // Tidak spawn makanan jika game over atau menang
+  
+        const food = document.createElement('div');
+        food.classList.add('food-item');
+        food.style.animationDuration = `${Math.random() * 3 + 2}s`;  // Makanan jatuh lebih cepat
+        food.style.left = `${Math.random() * 360}px`;  // Acak posisi horizontal
+        document.querySelector('.game-container').appendChild(food);
+  
+        // Cek tabrakan dengan keranjang
+        let foodInterval = setInterval(() => {
+          let foodPosition = food.getBoundingClientRect();
+          let basketPosition = basket.getBoundingClientRect();
+          let bottomLinePosition = bottomLine.getBoundingClientRect();
+  
+          // Cek jika makanan jatuh tepat di atas keranjang
+          if (foodPosition.bottom > basketPosition.top &&
+              foodPosition.left + foodPosition.width > basketPosition.left &&
+              foodPosition.left < basketPosition.left + basketPosition.width) {
+            score += 10;  // Menyelamatkan makanan
+            scoreBoard.textContent = `Poin: ${score}`;
+            food.remove();
+            clearInterval(foodInterval);  // Menghentikan interval jika makanan tertangkap
+          } else if (foodPosition.bottom > bottomLinePosition.top) {
+            hp -= 1;  // Jika makanan melewati garis bawah, kurangi HP
+            hearts = '❤️'.repeat(hp) + '🖤'.repeat(3 - hp);  // Update hati hanya 3 hati
+            heartsBoard.textContent = hearts;
+  
+            if (hp <= 0) {
+              isGameOver = true;
+              gameOverText.style.display = 'block';  // Game Over jika HP habis
+              restartButton.style.display = 'block';  // Tampilkan tombol restart
+            }
+  
+            hpBoard.textContent = `HP: ${hp}`;
+            food.remove();
+            clearInterval(foodInterval);  // Menghentikan interval jika makanan jatuh
+          }
+  
+        }, 10); // Mengecek tabrakan setiap 10ms
+  
+        // Jika poin mencapai 500, berhenti permainan dan tampilkan You Win
+        if (score >= 500) {
+          hasWon = true;
+          youWinText.style.display = 'block';  // Menampilkan pesan kemenangan
+          restartButton.style.display = 'block';  // Tampilkan tombol restart
+          return;
+        }
+  
+        // Mengatur delay spawn makanan secara acak
+        const delay = Math.random() * 2000 + 1000; // Delay antara 1 hingga 3 detik
+        setTimeout(spawnFood, delay);
+      }
+  
+      // Mulai spawn makanan pertama kali
+      setTimeout(spawnFood, Math.random() * 2000 + 1000); // Delay spawn pertama kali acak antara 1 dan 3 detik
+  
+      // Fungsi untuk restart game
+      restartButton.addEventListener('click', () => {
+        isGameOver = false;
+        hasWon = false;
+        score = 0;
+        hp = 3;
+        hearts = '❤️❤️❤️';
+        scoreBoard.textContent = `Poin: ${score}`;
+        hpBoard.textContent = `HP: ${hp}`;
+        heartsBoard.textContent = hearts;
+        gameOverText.style.display = 'none';
+        youWinText.style.display = 'none';
+        restartButton.style.display = 'none';
+        document.querySelectorAll('.food-item').forEach(food => food.remove());
+        spawnFood();
+      });
+    </script>
+  </body>
+  </html>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+     <!-- Footer -->
+     <footer class="bg-green-700 text-white text-center p-6 mt-10">
+        <p>© 2025 Save Our Food. Semua Hak Dilindungi.</p>
+      </footer>
+    
+    </body>
+    </html>
+

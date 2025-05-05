@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Save Our Food - Food Loss Awareness</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 font-sans leading-relaxed tracking-wide flex flex-col">
+ 
+ <!-- Header -->
+  <header class="bg-green-700 text-white p-6 shadow-lg">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="text-3xl font-bold">Save Our Food</h1>
+      <nav class="space-x-4">
+        <a href="index.html">Beranda</a>
+        <a href="nff.html">Edukasi</a>
+        <a href="bbb.html">Kontak</a>
+        <a href="ccc.html">Aksi Nyata</a>
+        <a href="ddd.html">Ramalan Pangan</a>
+        <a href="eee.html">Game</a>
+      </nav>
+    </div>
+  </header>
+
+<!-- Ramalan Pangan Section -->
+<section id="ramalan" class="max-w-6xl mx-auto p-10">
+    <h2 class="text-4xl font-bold text-green-700 mb-8 text-center">Ramalan Pangan</h2>
+    <div class="bg-white p-8 rounded-xl shadow-lg space-y-6 text-gray-700 leading-relaxed">
+  
+      <p class="text-lg text-center mb-6">
+        Di balik setiap bahan pangan, tersembunyi detik-detik yang menuju kefanaan.  
+        Masukkan jenis makananmu, dan biarkan kami membisikkan kapan ia perlahan akan lenyap dari keberadaannya.
+      </p>
+  
+      <div class="flex flex-col md:flex-row md:space-x-4 justify-center items-center">
+        <input type="text" id="foodName" placeholder="Contoh: Susu, Roti, Apel" class="border border-green-300 rounded-full p-4 w-80 mb-4 md:mb-0">
+        <button onclick="predictExpiry()" class="px-8 py-4 bg-green-700 text-white rounded-full hover:bg-green-800 transition font-bold">
+          Ramalkan!
+        </button>
+      </div>
+  
+      <div id="predictionResult" class="mt-8 text-center text-xl text-green-800 font-semibold"></div>
+      <div id="errorMessage" class="mt-4 text-center text-xl text-red-600 font-semibold hidden"></div>
+  
+    </div>
+  </section>
+  
+  <script>
+    function predictExpiry() {
+      const food = document.getElementById("foodName").value.toLowerCase();
+      const result = document.getElementById("predictionResult");
+      const errorMessage = document.getElementById("errorMessage");
+      let days = 0;
+  
+      // Valid foods and their expiry times (in days)
+      const validFoods = {
+        "susu": 5,
+        "roti": 7,
+        "apel": 14,
+        "daging": 3,
+        "sayur": 5,
+        "telur": 21,
+        "keju": 10,
+        "madu": 365,
+        "nasi": 2,
+        "ikan": 1,
+        "bawang merah": 30,
+        "bawang putih": 180,
+        "kentang": 30,
+        "wortel": 15,
+        "brokoli": 7,
+        "selada": 3,
+        "tomat": 7,
+        "jeruk": 21,
+        "pisang": 7,
+        "anggur": 5,
+        "melon": 5,
+        "stroberi": 3,
+        "alpukat": 2,
+        "cokelat": 180,
+        "krim": 7,
+        "susu kedelai": 5,
+        "jamur": 5,
+        "bubur ayam": 1,
+        "pizza": 2
+      };
+  
+      // Reset previous error message
+      errorMessage.classList.add("hidden");
+  
+      // Check if food is valid
+      if (validFoods[food]) {
+        days = validFoods[food];
+        result.innerHTML = `🌱 "<i>${food.charAt(0).toUpperCase() + food.slice(1)}</i>" akan menuju kefanaannya dalam <span class="text-green-700">${days} hari</span>.`;
+      } else {
+        result.innerHTML = "";
+        errorMessage.classList.remove("hidden");
+        errorMessage.innerHTML = "⚠️ Jawaban tidak valid. Masukkan nama makanan yang benar (misal: Susu, Roti, Apel, Daging, Sayur, dan lainnya).";
+      }
+    }
+  </script>
+  
+
+<!-- Footer -->
+      <footer class="bg-green-700 text-white text-center p-6 mt-10">
+        <p>© 2025 Save Our Food. Semua Hak Dilindungi.</p>
+      </footer>
+    
+    </body>
+    </html>
+
